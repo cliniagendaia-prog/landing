@@ -359,27 +359,24 @@
   min-height: 0;
 }
 
-.visual-card.large .visual-caption {
-  padding-top: 18px;
+.visual-card.large {
+  border-radius: 30px;
+  overflow: hidden;
+  background: #f7f8fb;
 }
 
-    .visual-caption {
-      padding: 20px 22px 24px;
-      border-top: 1px solid var(--line-soft);
-    }
+.visual-card.large img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+  min-height: 0;
+}
 
-    .visual-caption strong {
-      display: block;
-      font-size: 18px;
-      margin: 8px 0 8px;
-    }
-
-    .visual-caption p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.8;
-    }
+.visual-card.large .visual-caption {
+  padding: 20px 22px 24px;
+  background: #fff;
+}
 
     .stats-row {
       display: grid;
