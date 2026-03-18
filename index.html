@@ -347,9 +347,20 @@
   display: block;
 }
 
-.visual-card.large img,
-.visual-card.medium img {
+.visual-card.large {
+  background: #f7f8fb;
+}
+
+.visual-card.large img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
   min-height: 0;
+}
+
+.visual-card.large .visual-caption {
+  padding-top: 18px;
 }
 
     .visual-caption {
