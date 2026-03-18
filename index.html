@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CliniAgenda IA | Agente de IA para clínicas de belleza</title>
+  <meta
+    name="description"
+    content="Agente de IA para clínicas de belleza no invasivas: responde WhatsApp, detecta intención de reserva, consulta disponibilidad y convierte conversaciones en citas confirmadas."
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@600;700&display=swap"
+    rel="stylesheet"
+  >
+  <style>
+    :root {
+      --display: 'Cormorant Garamond', Georgia, serif;
+      --bg: #fcfcfb;
+      --surface: #ffffff;
+      --text: #161616;
+      --muted: #6f6f73;
+      --line: rgba(22,22,22,0.09);
+      --line-soft: rgba(22,22,22,0.05);
+      --dark: #111111;
+      --accent: #23283b;
+      --accent-soft: #f3f5fa;
+      --shadow: 0 20px 50px rgba(22,22,22,0.05);
+      --container: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, #ffffff 0%, #fcfcfb 100%);
+      line-height: 1.5;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+
+    .container {
+      width: min(var(--container), calc(100% - 36px));
+      margin: 0 auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--line-soft);
+    }
+
+    .nav {
+      min-height: 82px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--dark);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .brand span {
+      font-family: var(--display);
+      font-size: 29px;
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 26px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .nav-links a:hover { color: var(--text); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 54px;
+      padding: 0 26px;
+      border-radius: 999px;
+      font-weight: 700;
+      transition: 0.25s ease;
+      border: 1px solid transparent;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--dark);
+      color: #fff;
+      box-shadow: 0 10px 24px rgba(22,22,22,0.10);
+    }
+
+    .btn-primary:hover { transform: translateY(-2px); }
+
+    .btn-secondary {
+      background: #fff;
+      border-color: var(--line);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      border-color: rgba(22,22,22,0.16);
+    }
+
+    .eyebrow,
+    .section-label,
+    .mini-label {
+      display: inline-block;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #8b8b90;
+      font-weight: 700;
+    }
+
+    .hero {
+      padding: 96px 0 70px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 54px;
+      align-items: center;
+    }
+
+    .hero h1,
+    .section-title,
+    .cta-title,
+    .price {
+      font-family: var(--display);
+      letter-spacing: -0.035em;
+      color: var(--dark);
+      margin: 0;
+    }
+
+    .hero h1 {
+      font-size: clamp(50px, 7vw, 92px);
+      line-height: 0.93;
+      margin: 18px 0 22px;
+      max-width: 760px;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 670px;
+      font-size: 19px;
+      line-height: 1.9;
+      color: var(--muted);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 34px;
+    }
+
+    .hero-points {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 30px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line-soft);
+      max-width: 760px;
+    }
+
+    .hero-point strong {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 6px;
+      color: var(--dark);
+    }
+
+    .hero-point span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .hero-visual {
+      background: #fff;
+      border: 1px solid var(--line-soft);
+      border-radius: 34px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      min-height: 620px;
+    }
+
+    section {
+      padding: 110px 0;
+    }
+
+    .section-shell {
+      max-width: 1080px;
+    }
+
+    .section-title {
+      font-size: clamp(42px, 5vw, 74px);
+      line-height: 0.96;
+      margin: 16px 0 18px;
+      max-width: 940px;
+    }
+
+    .section-copy {
+      margin: 0;
+      max-width: 760px;
+      font-size: 18px;
+      line-height: 1.95;
+      color: var(--muted);
+    }
+
+    .pain-grid,
+    .benefit-grid,
+    .visual-grid,
+    .proof-grid,
+    .pricing-grid {
+      display: grid;
+      gap: 24px;
+      margin-top: 50px;
+    }
+
+    .pain-grid,
+    .benefit-grid,
+    .proof-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .pain-card,
+    .benefit-card,
+    .proof-card {
+      padding: 30px 28px;
+      border-top: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .pain-card strong,
+    .benefit-card strong,
+    .proof-card strong {
+      display: block;
+      font-family: var(--display);
+      font-size: 32px;
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      margin-bottom: 12px;
+    }
+
+    .pain-card p,
+    .benefit-card p,
+    .proof-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.85;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .list-stack {
+      display: grid;
+      gap: 18px;
+      margin-top: 34px;
+    }
+
+    .list-item {
+      padding: 0 0 18px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+
+    .list-item strong {
+      display: block;
+      font-size: 17px;
+      margin-bottom: 8px;
+    }
+
+    .list-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.85;
+    }
+
+    .visual-grid {
+      grid-template-columns: 1.1fr 0.9fr;
+      align-items: stretch;
+    }
+
+    .visual-main,
+    .visual-side {
+      display: grid;
+      gap: 22px;
+    }
+
+    .visual-card {
+      background: #fff;
+      border: 1px solid var(--line-soft);
+      border-radius: 30px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .visual-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .visual-card.large img { min-height: 560px; }
+    .visual-card.medium img { min-height: 268px; }
+
+    .visual-caption {
+      padding: 20px 22px 24px;
+      border-top: 1px solid var(--line-soft);
+    }
+
+    .visual-caption strong {
+      display: block;
+      font-size: 18px;
+      margin: 8px 0 8px;
+    }
+
+    .visual-caption p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line-soft);
+    }
+
+    .stat strong {
+      display: block;
+      font-family: var(--display);
+      font-size: 58px;
+      line-height: 0.9;
+      margin-bottom: 10px;
+      letter-spacing: -0.04em;
+    }
+
+    .stat p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .pricing-grid {
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      gap: 0;
+    }
+
+    .pricing-card {
+      padding: 42px 34px 44px;
+      background: #fff;
+    }
+
+    .pricing-card + .pricing-card {
+      border-left: 1px solid var(--line-soft);
+    }
+
+    .pricing-card p {
+      margin: 0 0 24px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.9;
+      max-width: 480px;
+    }
+
+    .pricing-title {
+      font-family: var(--display);
+      font-size: 34px;
+      line-height: 1;
+      margin: 16px 0 20px;
+    }
+
+    .price-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .price {
+      font-size: 76px;
+      line-height: 0.88;
+    }
+
+    .price-sub {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #8b8b90;
+      padding-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .pricing-list {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .pricing-list div {
+      font-size: 15px;
+      line-height: 1.8;
+      color: #404045;
+    }
+
+    .pricing-list div::before {
+      content: '·';
+      margin-right: 10px;
+      color: #8b8b90;
+    }
+
+    .faq-list {
+      margin-top: 44px;
+      border-top: 1px solid var(--line-soft);
+    }
+
+    .faq-item {
+      padding: 26px 0;
+      border-bottom: 1px solid var(--line-soft);
+    }
+
+    .faq-item strong {
+      display: block;
+      font-family: var(--display);
+      font-size: 28px;
+      line-height: 1.05;
+      margin-bottom: 12px;
+    }
+
+    .faq-item p {
+      margin: 0;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.9;
+    }
+
+    .cta-box {
+      padding-top: 28px;
+      border-top: 1px solid var(--line);
+    }
+
+    .cta-title {
+      font-size: clamp(42px, 5vw, 78px);
+      line-height: 0.95;
+      margin: 16px 0 20px;
+      max-width: 900px;
+    }
+
+    .cta-copy {
+      margin: 0;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.95;
+    }
+
+    .cta-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 34px;
+    }
+
+    footer {
+      padding: 40px 0 56px;
+      color: #8b8b90;
+      font-size: 14px;
+    }
+
+    .footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--line-soft);
+      padding-top: 26px;
+    }
+
+    @media (max-width: 1024px) {
+      .hero-grid,
+      .split,
+      .pain-grid,
+      .benefit-grid,
+      .proof-grid,
+      .visual-grid,
+      .stats-row,
+      .pricing-grid,
+      .hero-points {
+        grid-template-columns: 1fr;
+      }
+
+      .pricing-card + .pricing-card {
+        border-left: none;
+        border-top: 1px solid var(--line-soft);
+      }
+
+      .nav-links { display: none; }
+    }
+
+    @media (max-width: 720px) {
+      .container { width: min(var(--container), calc(100% - 26px)); }
+      .hero { padding: 74px 0 46px; }
+      section { padding: 82px 0; }
+      .hero h1 { font-size: clamp(42px, 15vw, 64px); }
+      .section-title, .cta-title { font-size: clamp(38px, 13vw, 56px); }
+      .hero p, .section-copy, .cta-copy { font-size: 17px; }
+      .price { font-size: 58px; }
+      .hero-actions, .cta-actions { flex-direction: column; }
+      .btn { width: 100%; }
+      .hero-visual img { min-height: 420px; }
+      .visual-card.large img, .visual-card.medium img { min-height: 240px; }
+      .pricing-card, .pain-card, .benefit-card, .proof-card { padding: 28px 0; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <a href="#top" class="brand">
+        <div class="brand-mark">C</div>
+        <span>CliniAgenda IA</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#problema">Problema</a>
+        <a href="#solucion">Solución</a>
+        <a href="#pricing">Precio</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+
+      <a href="#cta" class="btn btn-primary">Solicitar demo</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">Agente de IA para clínicas de belleza no invasivas</div>
+          <h1>Si pierdes leads por WhatsApp, estás dejando dinero en la mesa.</h1>
+          <p>
+            CliniAgenda IA es el agente de IA para clínicas de belleza no invasivas que quieren responder más rápido, convertir más consultas en citas y proteger una experiencia premium sin añadir más carga a recepción.
+          </p>
+
+          <div class="hero-actions">
+            <a href="#cta" class="btn btn-primary">Solicitar demo privada</a>
+            <a href="#solucion" class="btn btn-secondary">Ver cómo funciona</a>
+          </div>
+
+          <div class="hero-points">
+            <div class="hero-point">
+              <strong>No llegues tarde al lead</strong>
+              <span>La velocidad de respuesta influye directamente en la reserva.</span>
+            </div>
+            <div class="hero-point">
+              <strong>Prioriza lo que vende</strong>
+              <span>No todas las conversaciones valen lo mismo. El agente ayuda a distinguirlas.</span>
+            </div>
+            <div class="hero-point">
+              <strong>Protege una marca cara</strong>
+              <span>Una clínica premium no puede sonar lenta, caótica o genérica.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <img src="hero-receptionist.png" alt="Recepcionista de clínica de belleza utilizando ordenador y WhatsApp para gestionar citas">
+        </div>
+      </div>
+    </section>
+
+    <section id="problema">
+      <div class="container section-shell">
+        <div class="section-label">El problema</div>
+        <h2 class="section-title">Cada minuto sin respuesta reduce la probabilidad de reserva.</h2>
+        <p class="section-copy">
+          En clínicas con ticket medio-alto, una mala atención inicial no solo genera caos operativo. También reduce conversión, deteriora la percepción de marca y deja ingresos sin capturar.
+        </p>
+
+        <div class="pain-grid">
+          <div class="pain-card">
+            <strong>El lead llega caliente y se enfría solo</strong>
+            <p>La clienta escribe cuando está lista para avanzar. Si no recibe respuesta rápida, compara, duda o desaparece.</p>
+          </div>
+          <div class="pain-card">
+            <strong>Tu equipo opera, pero no escala</strong>
+            <p>Recepción se queda atrapada resolviendo preguntas repetitivas en lugar de enfocarse en atención de valor y cierre fino.</p>
+          </div>
+          <div class="pain-card">
+            <strong>Tu marca se vende arriba, pero responde abajo</strong>
+            <p>Una estética premium con una respuesta lenta o confusa rompe la percepción de exclusividad que tanto cuesta construir.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="solucion">
+      <div class="container split">
+        <div>
+          <div class="section-label">La solución</div>
+          <h2 class="section-title">El agente responde, filtra y empuja la conversación hacia la cita.</h2>
+          <p class="section-copy">
+            No está pensado para impresionar con tecnología. Está pensado para mover más conversaciones hacia reserva, con menos fricción, menos carga manual y mejor percepción de marca.
+          </p>
+        </div>
+
+        <div class="list-stack">
+          <div class="list-item">
+            <strong>Responde lo repetitivo sin hacer esperar</strong>
+            <p>Horarios, tratamientos, duración, preparación y dudas iniciales se resuelven al instante.</p>
+          </div>
+          <div class="list-item">
+            <strong>Detecta intención real</strong>
+            <p>Ayuda a distinguir quién está explorando y quién está lista para reservar.</p>
+          </div>
+          <div class="list-item">
+            <strong>Acerca la propuesta de horario</strong>
+            <p>Reduce la distancia entre “me interesa” y “te propongo esta hora”.</p>
+          </div>
+          <div class="list-item">
+            <strong>Reduce fricción comercial</strong>
+            <p>Menos espera, menos caos y más conversaciones que no se pierden por lentitud operativa.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container section-shell">
+        <div class="section-label">Lo que el comprador necesita ver</div>
+        <h2 class="section-title">No necesita entender la tecnología. Necesita entender el impacto.</h2>
+        <p class="section-copy">
+          Por eso la landing enseña dolor, control y resultado: saturación actual, sistema claro y más tiempo para la experiencia humana.
+        </p>
+
+        <div class="visual-grid">
+          <div class="visual-main">
+            <div class="visual-card large">
+              <img src="dashboard-system.png" alt="Dashboard limpio de gestión de leads, citas, recordatorios y confirmaciones">
+              <div class="visual-caption">
+                <div class="mini-label">Vista del sistema</div>
+                <strong>Orden visible para una operación que hoy depende demasiado del equipo</strong>
+                <p>La idea no es vender software. Es vender control, seguimiento y una captación más seria.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="visual-side">
+            <div class="visual-card medium">
+              <img src="reception-overwhelmed.png" alt="Recepcionista saturada por múltiples mensajes y tareas de agenda">
+              <div class="visual-caption">
+                <div class="mini-label">Dolor actual</div>
+                <strong>El coste de seguir gestionando todo a mano</strong>
+                <p>Más mensajes, más interrupciones y más probabilidad de perder oportunidades valiosas.</p>
+              </div>
+            </div>
+
+            <div class="visual-card medium">
+              <img src="doctor-patient.png" alt="Doctor atendiendo a paciente en clínica moderna y luminosa">
+              <div class="visual-caption">
+                <div class="mini-label">Resultado</div>
+                <strong>Más foco en el servicio que realmente justifica el precio</strong>
+                <p>El equipo vuelve a dedicar tiempo a consulta, experiencia y atención de alto valor.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container section-shell">
+        <div class="section-label">Por qué lo compra un perfil premium</div>
+        <h2 class="section-title">No están comprando un bot. Están comprando más control sobre ingresos, tiempo y marca.</h2>
+        <p class="section-copy">
+          El comprador correcto entiende algo simple: cuando el ticket es alto, cada lead mal gestionado cuesta demasiado como para seguir respondiendo tarde o improvisando la atención inicial.
+        </p>
+
+        <div class="benefit-grid">
+          <div class="benefit-card">
+            <strong>Más citas sin inflar estructura</strong>
+            <p>La clínica puede absorber más demanda sin tener que crecer recepción al mismo ritmo.</p>
+          </div>
+          <div class="benefit-card">
+            <strong>Mejor uso del tiempo senior</strong>
+            <p>Tu equipo deja de perder tiempo en lo básico y se concentra en lo que sí mueve valor.</p>
+          </div>
+          <div class="benefit-card">
+            <strong>Una experiencia acorde al precio</strong>
+            <p>Si vendes premium, la atención inicial también tiene que sentirse premium.</p>
+          </div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat">
+            <strong>+10–25%</strong>
+            <p>Más citas potenciales cuando la respuesta llega a tiempo y la conversación no se estanca.</p>
+          </div>
+          <div class="stat">
+            <strong>5–15h</strong>
+            <p>Tiempo semanal liberado al eliminar gran parte de la fricción repetitiva en recepción.</p>
+          </div>
+          <div class="stat">
+            <strong>24/7</strong>
+            <p>Captación inicial incluso fuera de horario, cuando muchas decisiones de reserva realmente ocurren.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing">
+      <div class="container section-shell">
+        <div class="section-label">Implementación</div>
+        <h2 class="section-title">Empieza por el flujo que más dinero te evita perder.</h2>
+        <p class="section-copy">
+          La mejor implementación no empieza por complejidad. Empieza por el cuello de botella comercial más evidente: responder mejor, más rápido y acercar la cita.
+        </p>
+
+        <div class="pricing-grid">
+          <div class="pricing-card">
+            <div class="mini-label">Pilot Sprint</div>
+            <div class="pricing-title">Validación inicial</div>
+
+            <div class="price-row">
+              <div class="price">490€</div>
+              <div class="price-sub">Pago único</div>
+            </div>
+
+            <p>
+              Para clínicas que quieren comprobar rápido si responder mejor y antes se traduce en más control comercial y más oportunidades avanzadas.
+            </p>
+
+            <div class="pricing-list">
+              <div>Configuración base del flujo</div>
+              <div>Preguntas frecuentes personalizadas</div>
+              <div>Detección de intención de reserva</div>
+              <div>Propuesta de disponibilidad</div>
+              <div>Creación de cita en flujo definido</div>
+            </div>
+
+            <a href="#cta" class="btn btn-secondary">Quiero validar mi caso</a>
+          </div>
+
+          <div class="pricing-card">
+            <div class="mini-label">Continuidad</div>
+            <div class="pricing-title">Desde 199€/mes</div>
+
+            <div class="price-row">
+              <div class="price">199€</div>
+              <div class="price-sub">/ mes + setup</div>
+            </div>
+
+            <p>
+              Para clínicas que entienden que la atención inicial forma parte de su sistema comercial y quieren optimizarla de forma continua.
+            </p>
+
+            <div class="pricing-list">
+              <div>Atención inicial automatizada 24/7</div>
+              <div>Ajuste de tono y lógica conversacional</div>
+              <div>Optimización de disponibilidad y conversión</div>
+              <div>Soporte para evolución del flujo</div>
+              <div>Base preparada para futuras automatizaciones</div>
+            </div>
+
+            <a href="#cta" class="btn btn-primary">Solicitar demo</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container section-shell">
+        <div class="section-label">Quién encaja mejor</div>
+        <h2 class="section-title">No es para quien busca ahorrar unos euros. Es para quien quiere proteger margen y marca.</h2>
+        <p class="section-copy">
+          Encaja especialmente bien con clínicas donde cada nuevo paciente tiene valor alto, la percepción premium importa y el volumen de WhatsApp ya está creando fricción operativa real.
+        </p>
+
+        <div class="proof-grid">
+          <div class="proof-card">
+            <strong>Ticket medio-alto</strong>
+            <p>Cuando una sola cita tiene valor relevante, perder leads por lentitud deja de ser aceptable.</p>
+          </div>
+          <div class="proof-card">
+            <strong>Volumen suficiente</strong>
+            <p>Cuanto más tráfico entra, más visible se vuelve el retorno de poner orden en la primera respuesta.</p>
+          </div>
+          <div class="proof-card">
+            <strong>Marca exigente</strong>
+            <p>Los compradores premium saben que la experiencia de reserva también vende, o destruye valor.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <div class="container section-shell">
+        <div class="section-label">FAQ</div>
+        <h2 class="section-title">Preguntas frecuentes</h2>
+        <p class="section-copy">
+          Las dudas típicas de quien está valorando implementar un agente de IA en una clínica estética.
+        </p>
+
+        <div class="faq-list">
+          <div class="faq-item">
+            <strong>¿Esto sustituye a recepción?</strong>
+            <p>No. El objetivo es descargar la parte repetitiva y acelerar el primer tramo comercial para que recepción se enfoque en tareas de más valor.</p>
+          </div>
+
+          <div class="faq-item">
+            <strong>¿Sirve solo para clínicas grandes?</strong>
+            <p>No. Sirve especialmente bien en clínicas con ticket medio-alto y suficiente volumen de consultas por WhatsApp como para que la velocidad de respuesta tenga impacto real.</p>
+          </div>
+
+          <div class="faq-item">
+            <strong>¿Puede consultar disponibilidad y ayudar a cerrar la cita?</strong>
+            <p>Sí. El flujo está pensado para mover la conversación hacia la reserva y reducir fricción en la propuesta de horarios.</p>
+          </div>
+
+          <div class="faq-item">
+            <strong>¿Se puede personalizar al tono de la clínica?</strong>
+            <p>Sí. Esa parte es clave. Una clínica premium no debería sonar genérica, y el agente debe mantener coherencia con la marca.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="cta">
+      <div class="container section-shell">
+        <div class="cta-box">
+          <div class="section-label">Private demo</div>
+          <h2 class="cta-title">Haz que tu clínica deje de perder oportunidades por responder tarde.</h2>
+          <p class="cta-copy">
+            Si tu clínica ya invierte en marca, equipo e instalaciones, no tiene sentido seguir perdiendo leads por una atención inicial lenta o desordenada. CliniAgenda IA está diseñado para corregir exactamente eso.
+          </p>
+
+          <div class="cta-actions">
+            <a href="mailto:cliniagendaia@gmail.com?subject=Demo%20CliniAgenda%20IA" class="btn btn-primary">Solicitar demo</a>
+            <a href="https://wa.me/34651523573" class="btn btn-secondary">Hablar por WhatsApp</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-row">
+      <div class="brand">
+        <div class="brand-mark">C</div>
+        <span>CliniAgenda IA</span>
+      </div>
+      <div>Agente de IA para clínicas de belleza no invasivas.</div>
+    </div>
+  </footer>
+</body>
+</html>
