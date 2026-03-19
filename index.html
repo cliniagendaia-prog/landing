@@ -259,6 +259,90 @@
     .cta-copy { margin: 0; max-width: 760px; color: var(--muted); font-size: 18px; line-height: 1.9; }
     .cta-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
 
+    .contact-box {
+      margin-top: 42px;
+      border: 1px solid rgba(184,109,63,0.16);
+      border-radius: 28px;
+      padding: 30px;
+      background: linear-gradient(180deg, #fffdfb 0%, #f8f1ea 100%);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .contact-copy h3 {
+      font-family: var(--display);
+      font-size: 42px;
+      line-height: 0.98;
+      letter-spacing: -0.03em;
+      margin: 12px 0 14px;
+    }
+
+    .contact-copy p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.85;
+      max-width: 460px;
+    }
+
+    .contact-list {
+      margin-top: 20px;
+      display: grid;
+      gap: 10px;
+      color: #5d524d;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .contact-form {
+      display: grid;
+      gap: 14px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .contact-form label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: #5d524d;
+      margin-bottom: 8px;
+    }
+
+    .contact-form input,
+    .contact-form textarea,
+    .contact-form select {
+      width: 100%;
+      border: 1px solid rgba(184,109,63,0.16);
+      border-radius: 16px;
+      padding: 14px 16px;
+      font: inherit;
+      color: var(--text);
+      background: rgba(255,255,255,0.92);
+      outline: none;
+    }
+
+    .contact-form textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    .contact-note {
+      color: #8b6f5d;
+      font-size: 12px;
+      line-height: 1.7;
+      margin: 0;
+    }
+
     footer { padding: 40px 0 56px; color: #8b8b90; font-size: 14px; }
     .footer-row {
       display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
@@ -267,7 +351,7 @@
 
     @media (max-width: 1024px) {
       .hero-grid, .split, .pain-grid, .benefit-grid, .proof-grid, .deliverable-grid, .visual-grid,
-      .pricing-grid, .trust-row, .flow-grid, .case-strip, .micro-conversion, .case-metrics {
+      .pricing-grid, .trust-row, .flow-grid, .case-strip, .micro-conversion, .case-metrics, .contact-grid, .form-row {
         grid-template-columns: 1fr;
       }
       .pricing-card + .pricing-card { border-left: none; border-top: 1px solid var(--line-soft); }
@@ -275,6 +359,7 @@
     }
 
     @media (max-width: 720px) {
+      .contact-box { padding: 22px; }
       .container { width: min(var(--container), calc(100% - 24px)); }
       .hero { padding: 70px 0 44px; }
       section { padding: 78px 0; }
@@ -314,7 +399,7 @@
           <h1>Si pierdes leads por WhatsApp, estás dejando dinero en la mesa.</h1>
           <p class="hero-subline">Convierte más conversaciones de WhatsApp en citas confirmadas, sin sobrecargar recepción.</p>
           <p>
-            CliniAgenda IA responde preguntas frecuentes, detecta intención real de reserva, ayuda a consultar disponibilidad y reduce la fricción entre el primer mensaje y la cita.
+            CliniAgenda IA ayuda a clínicas de belleza no invasivas a responder mejor por WhatsApp, filtrar intención de reserva y reducir la fricción entre el primer mensaje y la cita.
           </p>
           <div class="hero-actions">
             <a href="#cta" class="btn btn-primary">Solicitar diagnóstico de WhatsApp</a>
@@ -527,10 +612,12 @@
           <div>
             <div class="section-label">Microconversión</div>
             <h3>¿No quieres pedir una demo todavía? Empieza por un diagnóstico rápido.</h3>
-            <p>Si todavía no sabes si CliniAgenda IA encaja con tu clínica, puedes pedir una revisión inicial de tu captación por WhatsApp. Es una mejor puerta de entrada para tráfico frío que no está listo para hablar ya.</p>
+            <p>
+                Si todavía no sabes si este agente encaja con tu clínica, puedes pedir una revisión inicial de tu captación por WhatsApp. Es una mejor puerta de entrada para tráfico frío que no está listo para hablar ya.
+              </p>
             <div class="micro-actions">
               <a href="mailto:cliniagendaia@gmail.com?subject=Diagn%C3%B3stico%20WhatsApp%20Cl%C3%ADnica" class="btn btn-primary">Solicitar diagnóstico de WhatsApp</a>
-              <a href="https://wa.me/34651523573?text=Hola%2C%20quiero%20ver%20si%20mi%20cl%C3%ADnica%20encaja%20con%20CliniAgenda%20IA" class="btn btn-secondary">Ver si mi clínica encaja</a>
+              <a href="#contacto" class="btn btn-secondary">Enviar mensaje</a>
             </div>
           </div>
           <div class="micro-box">
@@ -667,8 +754,68 @@
             Si tu clínica ya invierte en marca, equipo e instalaciones, no tiene sentido seguir perdiendo leads por una atención inicial lenta o desordenada. CliniAgenda IA está diseñado para corregir exactamente eso.
           </p>
           <div class="cta-actions">
-            <a href="mailto:cliniagendaia@gmail.com?subject=Diagn%C3%B3stico%20WhatsApp%20Cl%C3%ADnica" class="btn btn-primary">Solicitar diagnóstico de WhatsApp</a>
-            <a href="https://wa.me/34651523573?text=Hola%2C%20quiero%20analizar%20si%20mi%20cl%C3%ADnica%20encaja%20con%20CliniAgenda%20IA" class="btn btn-secondary">Analiza mi caso</a>
+            <a href="https://wa.me/34651523573?text=Hola%2C%20quiero%20analizar%20si%20mi%20cl%C3%ADnica%20encaja%20con%20CliniAgenda%20IA" class="btn btn-primary">Analiza mi caso por WhatsApp</a>
+            <a href="#contacto" class="btn btn-secondary">Enviar mensaje</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contacto">
+      <div class="container section-shell">
+        <div class="contact-box">
+          <div class="contact-grid">
+            <div class="contact-copy">
+              <div class="section-label">Contacto</div>
+              <h3>Cuéntanos tu caso y te respondemos por email.</h3>
+              <p>
+                Este formulario es mejor que un botón de email porque no depende de que la persona tenga una app de correo configurada. Deja tus datos y el contexto de tu clínica.
+              </p>
+              <div class="contact-list">
+                <div>• Ideal para tráfico frío que aún no quiere escribir por WhatsApp</div>
+                <div>• Útil para clínicas que quieren explicar su caso con calma</div>
+                <div>• Te ayuda a captar leads aunque no tengan mail configurado en el navegador</div>
+              </div>
+            </div>
+            <form class="contact-form" action="https://formspree.io/f/xvzwlzkp" method="POST">
+              <div class="form-row">
+                <div>
+                  <label for="nombre">Nombre</label>
+                  <input id="nombre" name="nombre" type="text" placeholder="Tu nombre" required>
+                </div>
+                <div>
+                  <label for="empresa">Empresa</label>
+                  <input id="empresa" name="empresa" type="text" placeholder="Nombre de tu clínica o negocio">
+                </div>
+              </div>
+              <div class="form-row">
+                <div>
+                  <label for="email">Email</label>
+                  <input id="email" name="email" type="email" placeholder="tu@email.com" required>
+                </div>
+                <div>
+                  <label for="telefono">Teléfono</label>
+                  <input id="telefono" name="telefono" type="tel" placeholder="651 523 573">
+                </div>
+              </div>
+              <div>
+                <label for="volumen">Volumen aproximado de mensajes por WhatsApp</label>
+                <select id="volumen" name="volumen">
+                  <option value="">Selecciona una opción</option>
+                  <option>Menos de 20 por semana</option>
+                  <option>20 a 50 por semana</option>
+                  <option>50 a 100 por semana</option>
+                  <option>Más de 100 por semana</option>
+                </select>
+              </div>
+              <div>
+                <label for="mensaje">Cuéntanos tu caso</label>
+                <textarea id="mensaje" name="mensaje" placeholder="Ejemplo: recibimos muchos mensajes fuera de horario, recepción va saturada y queremos ver si podemos automatizar la parte inicial." required></textarea>
+              </div>
+              <input type="hidden" name="_subject" value="Nuevo lead desde CliniAgenda IA">
+              <button type="submit" class="btn btn-primary">Enviar mensaje</button>
+              <p class="contact-note">Te responderemos al email que indiques con una valoración inicial de tu caso.</p>
+            </form>
           </div>
         </div>
       </div>
@@ -681,8 +828,9 @@
         <div class="brand-mark">C</div>
         <span>CliniAgenda IA</span>
       </div>
-      <div>Agente de IA para clínicas de belleza no invasivas.</div>
+      <div>Agente de IA que ayuda a clínicas de belleza a captar y convertir más citas desde WhatsApp.</div>
     </div>
   </footer>
 </body>
 </html>
+
